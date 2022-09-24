@@ -48,8 +48,6 @@ WifiMarauderApp* wifi_marauder_app_alloc() {
         WifiMarauderAppViewVarItemList,
         variable_item_list_get_view(app->var_item_list));
 
-    menu_items = app->var_item_list
-
     for(int i = 0; i < NUM_MENU_ITEMS; ++i) {
         app->selected_option_index[i] = 0;
     }
