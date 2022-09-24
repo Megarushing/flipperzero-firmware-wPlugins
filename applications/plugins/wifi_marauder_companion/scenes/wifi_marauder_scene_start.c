@@ -21,12 +21,14 @@ typedef struct {
     bool show_stopscan_tip;
 } WifiMarauderItem;
 
-// NUM_MENU_ITEMS defined in wifi_marauder_app_i.h - if you add an entry here, increment it!
-const WifiMarauderItem items[NUM_MENU_ITEMS] = {
+const WifiMarauderItem items[] = {
     {"View Log from", {"start", "end"}, 2, {"", ""}, NO_ARGS, FOCUS_CONSOLE_TOGGLE, NO_TIP},
+    {"Custom CMD", {""}, 1, {""}, INPUT_ARGS, FOCUS_CONSOLE_END, NO_TIP},
     {"Scan AP", {""}, 1, {"scanap"}, NO_ARGS, FOCUS_CONSOLE_END, SHOW_STOPSCAN_TIP},
+    {"Stop Scan", {""}, 1, {"stopscan"}, NO_ARGS, FOCUS_CONSOLE_END, NO_TIP},
+    {"Selector", {"ap", "ssid"}, 2, {"", ""}, NO_ARGS, FOCUS_CONSOLE_END, NO_TIP},
     {"SSID",
-     {"add random", "add name", "remove"},
+     {"random", "name", "remove"},
      3,
      {"ssid -a -g", "ssid -a -n", "ssid -r"},
      INPUT_ARGS,

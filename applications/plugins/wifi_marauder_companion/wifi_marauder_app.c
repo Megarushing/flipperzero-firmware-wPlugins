@@ -22,6 +22,8 @@ static void wifi_marauder_app_tick_event_callback(void* context) {
 }
 
 WifiMarauderApp* wifi_marauder_app_alloc() {
+    int menu_items = 0;
+
     WifiMarauderApp* app = malloc(sizeof(WifiMarauderApp));
 
     app->gui = furi_record_open(RECORD_GUI);
@@ -45,6 +47,8 @@ WifiMarauderApp* wifi_marauder_app_alloc() {
         app->view_dispatcher,
         WifiMarauderAppViewVarItemList,
         variable_item_list_get_view(app->var_item_list));
+
+    menu_items = app->var_item_list
 
     for(int i = 0; i < NUM_MENU_ITEMS; ++i) {
         app->selected_option_index[i] = 0;
