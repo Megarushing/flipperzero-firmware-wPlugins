@@ -31,7 +31,6 @@ steps:
   - name: "Bundle self-update packages"
     image: kramos/alpine-zip
     commands:
-      - tar czpf artifacts-default/flipper-z-f7-update-${DRONE_TAG}.tgz -C artifacts-default f7-update-${DRONE_TAG}
       - cp artifacts-default/flipper-z-f7-update-${DRONE_TAG}.tgz .
       - zip -r artifacts-default/flipper-z-f7-update-${DRONE_TAG}.zip artifacts-default/f7-update-${DRONE_TAG}
       - rm -rf artifacts-default/f7-update-${DRONE_TAG}
@@ -85,7 +84,7 @@ steps:
         Version: {{build.tag}}
 
 
-        [-Github-](https://github.com/Eng1n33r/flipperzero-firmware/releases/tag/${DRONE_TAG})
+        [-Github-](https://github.com/DarkFlippers/unleashed-firmware/releases/tag/${DRONE_TAG})
 
 
         [-Install via Web Updater-](https://my.flipp.dev/?url=https://unleashedflip.com/builds/flipper-z-f7-update-${DRONE_TAG}.tgz&channel=dev-cfw&version=${DRONE_TAG})"
@@ -105,7 +104,7 @@ steps:
         Version: {{build.tag}}
 
 
-        [[Github]](https://github.com/Eng1n33r/flipperzero-firmware/releases/tag/${DRONE_TAG})
+        [[Github]](https://github.com/DarkFlippers/unleashed-firmware/releases/tag/${DRONE_TAG})
 
 
         [-Install via Web Updater-](https://my.flipp.dev/?url=https://unleashedflip.com/builds/flipper-z-f7-update-${DRONE_TAG}.tgz&channel=dev-cfw&version=${DRONE_TAG})"

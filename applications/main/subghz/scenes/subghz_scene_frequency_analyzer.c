@@ -14,6 +14,10 @@ void subghz_scene_frequency_analyzer_on_enter(void* context) {
     DOLPHIN_DEED(DolphinDeedSubGhzFrequencyAnalyzer);
     subghz_frequency_analyzer_set_callback(
         subghz->subghz_frequency_analyzer, subghz_scene_frequency_analyzer_callback, subghz);
+    subghz_frequency_analyzer_feedback_level(
+        subghz->subghz_frequency_analyzer,
+        subghz->last_settings->frequency_analyzer_feedback_level,
+        true);
     view_dispatcher_switch_to_view(subghz->view_dispatcher, SubGhzViewIdFrequencyAnalyzer);
 }
 
@@ -31,7 +35,7 @@ bool subghz_scene_frequency_analyzer_on_event(void* context, SceneManagerEvent e
             return true;
         } else if(event.event == SubGhzCustomEventViewReceiverUnlock) {
             // Don't need to save, we already saved on short event
-#if FURI_DEBUG
+#ifdef FURI_DEBUG
             FURI_LOG_W(TAG, "Goto next scene!");
 #endif
             scene_manager_next_scene(subghz->scene_manager, SubGhzSceneReceiver);
@@ -44,4 +48,8 @@ bool subghz_scene_frequency_analyzer_on_event(void* context, SceneManagerEvent e
 void subghz_scene_frequency_analyzer_on_exit(void* context) {
     SubGhz* subghz = context;
     notification_message(subghz->notifications, &sequence_reset_rgb);
+
+    subghz->last_settings->frequency_analyzer_feedback_level =
+        subghz_frequency_analyzer_feedback_level(subghz->subghz_frequency_analyzer, 0, false);
+    subghz_last_settings_save(subghz->last_settings);
 }

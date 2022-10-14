@@ -28,7 +28,7 @@ bool subghz_scene_set_type_submenu_gen_data_protocol(
         subghz_receiver_search_decoder_base_by_name(subghz->txrx->receiver, protocol_name);
 
     if(subghz->txrx->decoder_result == NULL) {
-        string_set_str(subghz->error_str, "Protocol not\nfound!");
+        furi_string_set(subghz->error_str, "Protocol not\nfound!");
         scene_manager_next_scene(subghz->scene_manager, SubGhzSceneShowErrorSub);
         return false;
     }
@@ -169,6 +169,12 @@ void subghz_scene_set_type_on_enter(void* context) {
         subghz);
     submenu_add_item(
         subghz->submenu,
+        "Security+1.0 433MHz",
+        SubmenuIndexLiftMaster_433_00,
+        subghz_scene_set_type_submenu_callback,
+        subghz);
+    submenu_add_item(
+        subghz->submenu,
         "Security+2.0 310MHz",
         SubmenuIndexSecPlus_v2_310_00,
         subghz_scene_set_type_submenu_callback,
@@ -183,6 +189,12 @@ void subghz_scene_set_type_on_enter(void* context) {
         subghz->submenu,
         "Security+2.0 390MHz",
         SubmenuIndexSecPlus_v2_390_00,
+        subghz_scene_set_type_submenu_callback,
+        subghz);
+    submenu_add_item(
+        subghz->submenu,
+        "Security+2.0 433MHz",
+        SubmenuIndexSecPlus_v2_433_00,
         subghz_scene_set_type_submenu_callback,
         subghz);
 
@@ -302,7 +314,7 @@ bool subghz_scene_set_type_on_event(void* context, SceneManagerEvent event) {
             }
             subghz_transmitter_free(subghz->txrx->transmitter);
             if(!generated_protocol) {
-                string_set_str(
+                furi_string_set(
                     subghz->error_str, "Function requires\nan SD card with\nfresh databases.");
                 scene_manager_next_scene(subghz->scene_manager, SubGhzSceneShowError);
             }
@@ -326,7 +338,7 @@ bool subghz_scene_set_type_on_event(void* context, SceneManagerEvent event) {
             }
             subghz_transmitter_free(subghz->txrx->transmitter);
             if(!generated_protocol) {
-                string_set_str(
+                furi_string_set(
                     subghz->error_str, "Function requires\nan SD card with\nfresh databases.");
                 scene_manager_next_scene(subghz->scene_manager, SubGhzSceneShowError);
             }
@@ -355,6 +367,20 @@ bool subghz_scene_set_type_on_event(void* context, SceneManagerEvent event) {
                    (uint64_t)key << 32 | 0xE6000000,
                    42,
                    390000000,
+                   "AM650")) {
+                generated_protocol = true;
+            }
+            break;
+        case SubmenuIndexLiftMaster_433_00:
+            while(!subghz_protocol_secplus_v1_check_fixed(key)) {
+                key = subghz_random_serial();
+            }
+            if(subghz_scene_set_type_submenu_gen_data_protocol(
+                   subghz,
+                   SUBGHZ_PROTOCOL_SECPLUS_V1_NAME,
+                   (uint64_t)key << 32 | 0xE6000000,
+                   42,
+                   433920000,
                    "AM650")) {
                 generated_protocol = true;
             }
@@ -399,6 +425,24 @@ bool subghz_scene_set_type_on_event(void* context, SceneManagerEvent event) {
             subghz->txrx->transmitter = subghz_transmitter_alloc_init(
                 subghz->txrx->environment, SUBGHZ_PROTOCOL_SECPLUS_V2_NAME);
             subghz_preset_init(subghz, "AM650", 390000000, NULL, 0);
+            if(subghz->txrx->transmitter) {
+                subghz_protocol_secplus_v2_create_data(
+                    subghz_transmitter_get_protocol_instance(subghz->txrx->transmitter),
+                    subghz->txrx->fff_data,
+                    key,
+                    0x68,
+                    0xE500000,
+                    subghz->txrx->preset);
+                generated_protocol = true;
+            } else {
+                generated_protocol = false;
+            }
+            subghz_transmitter_free(subghz->txrx->transmitter);
+            break;
+        case SubmenuIndexSecPlus_v2_433_00:
+            subghz->txrx->transmitter = subghz_transmitter_alloc_init(
+                subghz->txrx->environment, SUBGHZ_PROTOCOL_SECPLUS_V2_NAME);
+            subghz_preset_init(subghz, "AM650", 433920000, NULL, 0);
             if(subghz->txrx->transmitter) {
                 subghz_protocol_secplus_v2_create_data(
                     subghz_transmitter_get_protocol_instance(subghz->txrx->transmitter),
